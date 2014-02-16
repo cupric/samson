@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>net.cupric</groupId>
+    <artifactId>samson-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>samson-core</artifactId>
+  <name>SamsoN Core</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.googlecode.playn</groupId>
+      <artifactId>playn-core</artifactId>
+      <version>${playn.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.threerings</groupId>
+      <artifactId>tripleplay</artifactId>
+      <version>${tripleplay.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>13.0</version>
+    </dependency>
+  </dependencies>
+</project>
