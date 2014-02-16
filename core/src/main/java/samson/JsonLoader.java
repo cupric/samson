@@ -12,7 +12,7 @@ import playn.core.PlayN;
 import playn.core.json.JsonParserException;
 
 /**
- * Loads a json text resources.
+ * Loads json text resources.
  */
 public abstract class JsonLoader<T>
 {

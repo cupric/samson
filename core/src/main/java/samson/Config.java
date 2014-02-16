@@ -5,64 +5,233 @@
 
 package samson;
 
-import java.io.IOException;
-
-import playn.core.Json;
-import playn.core.PlayN;
+import java.util.StringTokenizer;
 
 import static samson.Log.log;
 
 /**
- * Models a set of values used for application configuration. Configuration is normally read only
- * and read on application startup.
+ * Abstractly defines the storage for a mapping of named values, delegating the actual storage
+ * mechanism to a subclass.
  *
- * <p>The common practice is to create, for each package that shares configuration information, a
- * class containing a static config object and static accessors for the values within. For example:
- *
- * <pre>
- * public class FooDeployment
- * {
- *     public static Config config = new Config("com/fribitz/foo");
- *
- *     public static int fiddles () {
- *         return config.getValue(ConfigBase.INTEGER, "fiddles", 0);
- *     }
- * }
- * </pre>
- *
- * When loaded, this class will look for <code>com/fribitz/foo.json</code> in the PlayN assets.
- * When <code>fiddles</code> is called, the json integer value assigned to the key "fiddles"
- * will be returned, or 0 if no value with that name is present.
+ * <p>The abstract method retrieves string values by name, and
+ * {@link #getValue(ValueType, String, Object)()} does all the heavy lifting for typed access.</p>
  */
-public class Config extends ConfigBase
+public abstract class Config
 {
     /**
-     * Constructs a new config object which will obtain configuration information from the
-     * specified properties bundle.
+     * Manages one type of value stored in the config. A number of types are defined below, but
+     * other types may be defined.
      */
-    public Config (String path)
+    public static abstract class ValueType<T>
     {
+        /** Returns the value for the given string. */
+        public abstract T parse (String strValue);
+
+        /** Returns the string for the given value. */
+        public abstract String toString (T value);
+    }
+
+    /** Manages Integer config values. */
+    public static final ValueType<Integer> INTEGER = new ValueType<Integer>() {
+        @Override
+        public Integer parse (String strValue) {
+            return Integer.decode(strValue);
+        }
+
+        @Override
+        public String toString (Integer val) {
+            return Integer.toString(val);
+        }
+    };
+
+    /** Manages Long config values. */
+    public static final ValueType<Long> LONG = new ValueType<Long>() {
+        @Override
+        public Long parse (String strValue) {
+            return Long.valueOf(strValue);
+        }
+
+        @Override
+        public String toString (Long val) {
+            return Long.toString(val);
+        }
+    };
+
+    /** Manages Float config values. */
+    public static final ValueType<Float> FLOAT = new ValueType<Float>() {
+        @Override
+        public Float parse (String strValue) {
+            return Float.valueOf(strValue);
+        }
+
+        @Override
+        public String toString (Float val) {
+            return Float.toString(val);
+        }
+    };
+
+    /** Manages Boolean config values. */
+    public static final ValueType<Boolean> BOOLEAN = new ValueType<Boolean>() {
+        @Override
+        public Boolean parse (String strValue) {
+            return !strValue.equalsIgnoreCase("false");
+        }
+
+        @Override
+        public String toString (Boolean val) {
+            return Boolean.toString(val);
+        }
+    };
+
+    /** Manages String config values. */
+    public static final ValueType<String> STRING = new ValueType<String>() {
+        @Override
+        public String parse (String strValue) {
+            return strValue;
+        }
+
+        @Override
+        public String toString (String val) {
+            return val;
+        }
+    };
+
+    /** Manages int[] config values. When parsing, if any value in the array cannot be parsed
+     * as an int, the exception is propagated. */
+    public static final ValueType<int[]> INT_ARRAY = new ValueType<int[]>() {
+        @Override
+        public int[] parse (String strValue) {
+            StringTokenizer tok = new StringTokenizer(strValue, ",");
+            int[] result = new int[tok.countTokens()];
+            for (int ii = 0; tok.hasMoreTokens(); ii++) {
+                result[ii] = Integer.parseInt(tok.nextToken().trim());
+            }
+            return result;
+        }
+
+        @Override
+        public String toString (int[] vals) {
+            StringBuilder str = new StringBuilder();
+            for (int val : vals) {
+                if (str.length() > 0) {
+                    str.append(",");
+                }
+                str.append(val);
+            }
+            return str.toString();
+        }
+    };
+
+    /** Manages long[] config values. When parsing, if any value in the array cannot be parsed
+     * as a long, the exception is propagated. */
+    public static final ValueType<long[]> LONG_ARRAY = new ValueType<long[]>() {
+        @Override
+        public long[] parse (String strValue) {
+            StringTokenizer tok = new StringTokenizer(strValue, ",");
+            long[] result = new long[tok.countTokens()];
+            for (int ii = 0; tok.hasMoreTokens(); ii++) {
+                result[ii] = Long.parseLong(tok.nextToken().trim());
+            }
+            return result;
+        }
+
+        @Override
+        public String toString (long[] vals) {
+            StringBuilder str = new StringBuilder();
+            for (long val : vals) {
+                if (str.length() > 0) {
+                    str.append(",");
+                }
+                str.append(val);
+            }
+            return str.toString();
+        }
+    };
+
+    /** Manages float[] config values. When parsing, if any value in the array cannot be parsed
+     * as a float, the exception is propagated. */
+    public static final ValueType<float[]> FLOAT_ARRAY = new ValueType<float[]>() {
+        @Override
+        public float[] parse (String strValue) {
+            StringTokenizer tok = new StringTokenizer(strValue, ",");
+            float[] result = new float[tok.countTokens()];
+            for (int ii = 0; tok.hasMoreTokens(); ii++) {
+                result[ii] = Long.parseLong(tok.nextToken().trim());
+            }
+            return result;
+        }
+
+        @Override
+        public String toString (float[] vals) {
+            StringBuilder str = new StringBuilder();
+            for (float val : vals) {
+                if (str.length() > 0) {
+                    str.append(",");
+                }
+                str.append(val);
+            }
+            return str.toString();
+        }
+    };
+
+    /** Manages String[] config values. Note that, when converting an array to a string, does not
+     * handle escaping of commas in elements in the array. Instead, fails fast by throwing an
+     * illegal argument exception. */
+    public static final ValueType<String[]> STRING_ARRAY = new ValueType<String[]>() {
+        @Override
+        public String[] parse (String strValue) {
+            StringTokenizer tok = new StringTokenizer(strValue, ",");
+            String[] result = new String[tok.countTokens()];
+            for (int ii = 0; tok.hasMoreTokens(); ii++) {
+                result[ii] = tok.nextToken().trim();
+            }
+            return result;
+        }
+
+        @Override
+        public String toString (String[] vals) {
+            StringBuilder str = new StringBuilder();
+            for (String val : vals) {
+                if (val.indexOf(',') >= 0) {
+                    throw new IllegalArgumentException("String has a comma");
+                }
+                if (str.length() > 0) {
+                    str.append(",");
+                }
+                str.append(val);
+            }
+            return str.toString();
+        }
+    };
+
+    /**
+     * Returns the value for the given key, or null if not present.
+     */
+    public abstract String getEntry (String key);
+
+    /**
+     * Gets a value obtained by parsing the entry of the given name. If the value does not exist,
+     * the default value is returned. If the string entry could not be parsed into the correct
+     * type, a warning is logged and the default value returned.
+     * @param vtype the type of the entry, used to parse the string
+     * @param name the name of the entry to retrieve 
+     * @param defval the default value
+     * incorrectly
+     * @param <T> generic return type 
+     * @return the parsed value, or, if the entry could not be found or could not be parsed, the
+     * passed-in default value
+     */
+    public <T> T getValue (ValueType<T> vtype, String name, T defval)
+    {
+        String val = getEntry(name);
+        if (val == null) {
+            return defval;
+        }
         try {
-            _props = JsonLoader.loadObject(path + PROPS_SUFFIX);
-        } catch (IOException ioe) {
-            log.warning("Unable to load configuration", "path", path, "ioe", ioe);
+            return vtype.parse(val);
+        } catch (Exception ex) {
+            log.warning("Malformed property", "type", vtype, "value", val);
         }
-
-        if (_props == null) {
-            // file not found, assume empty
-            _props = PlayN.json().createObject();
-        }
+        return defval;
     }
-
-    @Override
-    public String getEntry (String key)
-    {
-        return _props.getString(key);
-    }
-
-    /** Contains the default configuration information. */
-    protected Json.Object _props;
-
-    /** The file extension used for configuration files. */
-    protected static final String PROPS_SUFFIX = ".json";
 }

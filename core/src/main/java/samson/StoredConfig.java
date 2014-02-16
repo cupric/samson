@@ -6,6 +6,7 @@
 package samson;
 
 import playn.core.PlayN;
+import react.Connection;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -14,14 +15,14 @@ import com.google.common.collect.Multimap;
  * Extends the base config using {@link PlayN#storage()} to allow the values to be changed and
  * persisted in local client storage.
  *
- * <p>Typical usage is to create a static instance of {@code PrefsConfig} and a static {@code Value}
- * for each entry to be exposed. For example:
+ * <p>Typical usage is to create a static instance of {@code StorageConfig} and a static
+ * {@code Value} for each entry to be exposed. For example:
  *
  * <pre>
  * public class FooPrefs
  * {
- *     public static PrefsConfig config = new PrefisConfig("foo");
- *     public static PrefsConfig.Value<String> bar = config.create("bar", PrefsConfig.STRING, "");
+ *     public static StoredConfig config = new StoredConfig("foo");
+ *     public static StoredConfig.Value<String> bar = config.create("bar", Config.STRING, "");
  * }
  * </pre>
  * Client code may then use the {@code FooPrefs.bar} value just as it would any other value. For
@@ -42,8 +43,11 @@ import com.google.common.collect.Multimap;
  *     }
  * }
  * </pre>
+ * <p>NOTE: Beware of memory leaks when connecting to global Value instances. Either use
+ * {@link Connection#holdWeakly()}, or bind the lifetime of the connection to an {@code Element}
+ * instance.
  */
-public class PrefsConfig extends ConfigBase
+public class StoredConfig extends Config
 {
     public class Value<T> extends react.Value<T>
     {
@@ -82,7 +86,7 @@ public class PrefsConfig extends ConfigBase
     /**
      * Creates a new preferences config.
      */
-    public PrefsConfig ()
+    public StoredConfig ()
     {
         _prefix = "";
     }
@@ -92,7 +96,7 @@ public class PrefsConfig extends ConfigBase
      * begin with the prefix and a dot, effectively scoping all values. Typically a prefix
      * corresponds to a login name, or some subset of the app.
      */
-    public PrefsConfig (String prefix)
+    public StoredConfig (String prefix)
     {
         _prefix = prefix + ".";
     }
