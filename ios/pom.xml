@@ -19,6 +19,13 @@
 
   <dependencies>
     <dependency>
+      <groupId>net.ikvm</groupId>
+      <artifactId>ikvm-api</artifactId>
+      <version>0.46.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>net.cupric</groupId>
       <artifactId>samson-core</artifactId>
       <version>${project.version}</version>

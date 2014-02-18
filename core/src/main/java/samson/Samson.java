@@ -5,15 +5,82 @@
 
 package samson;
 
+import java.util.Comparator;
+
+import samson.text.DateTimeFormat;
+import samson.text.NumberFormat;
+import samson.util.Locale;
+
+/**
+ * Main entry point for samson cross-platform features. All platform-specific methods are defined
+ * in the {@link Platform} interface. The implemntation for the platform must be constructed and
+ * registered on application startup using {@link #register(Platform)}. Currently IOS and Java are
+ * supported, see the relevant sibling maven submodules. Static method equivalents may also be
+ * used, which simply delegate to the instance methods of {@link #platform()}.
+ * TODO: support more platforms
+ */
 public class Samson
 {
+    /**
+     * Defines cross platform methods.
+     */
     public interface Platform {
-        /** Tests if the asset exists at the given path in the application resources. */
+        /**
+         * Sets the locale to use when formatting dates, times and numbers.
+         */
+        void setLocale (Locale locale);
+
+        /**
+         * Gets the default locale for this environment.
+         */
+        Locale getDefaultLocale ();
+
+        /**
+         * Gets implementation of number formatting for the platform.
+         */
+        NumberFormat numberFormat ();
+
+        /**
+         * Gets implementation of date and time formatting for the platform.
+         */
+        DateTimeFormat dateTimeFormat ();
+
+        /**
+         * Gets implementation of lexical string comparison for the platform.
+         */
+        Comparator<String> stringComparator ();
+
+        /**
+         * Tests if the asset exists at the given path in the application resources.
+         */
         boolean exists (String assetPath);
     }
 
+    /**
+     * Registers a new samson implementation, must be called exactly once on application startup.
+     */
     public static void register (Platform instance) {
         _instance = instance;
+    }
+
+    public static void setLocale (Locale locale) {
+        _instance.setLocale(locale);
+    }
+
+    public static Locale getDefaultLocale () {
+        return _instance.getDefaultLocale();
+    }
+
+    public static NumberFormat numberFormat () {
+        return _instance.numberFormat();
+    }
+
+    public static DateTimeFormat dateTimeFormat () {
+        return _instance.dateTimeFormat();
+    }
+
+    public static Comparator<String> stringComparator () {
+        return _instance.stringComparator();
     }
 
     public static boolean exists (String assetPath) {
