@@ -26,7 +26,7 @@ public class IOSSamson implements Platform
 
     @Override
     public void setLocale (Locale locale) {
-        _formats.setLocale(locale);
+        _formats.setLocale(_locale = locale);
     }
 
     @Override
@@ -36,22 +36,30 @@ public class IOSSamson implements Platform
 
     @Override
     public NumberFormat numberFormat () {
-        return _formats;
+        return getFormats();
     }
 
     @Override
     public DateTimeFormat dateTimeFormat () {
-        return _formats;
+        return getFormats();
     }
 
     @Override
     public Comparator<String> stringComparator () {
-        return _formats;
+        return getFormats();
     }
 
     public boolean exists (String path) {
         return File.Exists(Path.Combine("assets/", path));
     }
 
+    private IOSFormats getFormats () {
+        if (_locale == null) {
+            setLocale(getDefaultLocale());
+        }
+        return _formats;
+    }
+
+    private Locale _locale;
     private IOSFormats _formats = new IOSFormats();
 }

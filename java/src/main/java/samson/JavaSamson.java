@@ -27,7 +27,7 @@ public class JavaSamson implements Samson.Platform
 
     @Override
     public void setLocale (Locale locale) {
-        _formats.setLocale(locale);
+        _formats.setLocale(_locale = locale);
     }
 
     @Override
@@ -37,18 +37,26 @@ public class JavaSamson implements Samson.Platform
 
     @Override
     public NumberFormat numberFormat () {
-        return _formats;
+        return getFormats();
     }
 
     @Override
     public DateTimeFormat dateTimeFormat () {
-        return _formats;
+        return getFormats();
     }
 
     @Override
     public Comparator<String> stringComparator () {
+        return getFormats();
+    }
+
+    private JavaFormats getFormats () {
+        if (_locale == null) {
+            setLocale(getDefaultLocale());
+        }
         return _formats;
     }
 
+    private Locale _locale;
     private JavaFormats _formats = new JavaFormats();
 }
