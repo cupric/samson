@@ -93,6 +93,10 @@ public class Samson
         return _instance.exists(assetPath);
     }
 
+    public static SecureUtil secureUtil () {
+        return _instance.secureUtil();
+    }
+
     public static Platform platform () {
         return _instance;
     }
