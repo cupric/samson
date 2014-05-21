@@ -12,6 +12,7 @@ import cli.MonoTouch.Foundation.NSLocale;
 import cli.System.IO.File;
 import cli.System.IO.Path;
 import samson.Samson.Platform;
+import samson.crypto.SecureUtil;
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
 import samson.util.Locale;
@@ -53,6 +54,11 @@ public class IOSSamson implements Platform
         return File.Exists(Path.Combine("assets/", path));
     }
 
+    @Override
+    public SecureUtil secureUtil () {
+        return _secureUtil;
+    }
+
     private IOSFormats getFormats () {
         if (_locale == null) {
             setLocale(getDefaultLocale());
@@ -62,4 +68,5 @@ public class IOSSamson implements Platform
 
     private Locale _locale;
     private IOSFormats _formats = new IOSFormats();
+    private IOSSecureUtil _secureUtil = new IOSSecureUtil();
 }

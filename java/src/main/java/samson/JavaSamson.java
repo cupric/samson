@@ -8,6 +8,7 @@ package samson;
 import java.util.Comparator;
 
 import playn.java.JavaPlatform;
+import samson.crypto.SecureUtil;
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
 import samson.util.Locale;
@@ -50,6 +51,11 @@ public class JavaSamson implements Samson.Platform
         return getFormats();
     }
 
+    @Override
+    public SecureUtil secureUtil () {
+        return _secureUtil;
+    }
+
     private JavaFormats getFormats () {
         if (_locale == null) {
             setLocale(getDefaultLocale());
@@ -59,4 +65,5 @@ public class JavaSamson implements Samson.Platform
 
     private Locale _locale;
     private JavaFormats _formats = new JavaFormats();
+    private JavaSecureUtil _secureUtil = new JavaSecureUtil();
 }

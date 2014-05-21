@@ -7,6 +7,7 @@ package samson;
 
 import java.util.Comparator;
 
+import samson.crypto.SecureUtil;
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
 import samson.util.Locale;
@@ -54,6 +55,11 @@ public class Samson
          * Tests if the asset exists at the given path in the application resources.
          */
         boolean exists (String assetPath);
+
+        /**
+         * Gets the secure utilities for the platform.
+         */
+        SecureUtil secureUtil ();
     }
 
     /**
