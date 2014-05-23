@@ -38,6 +38,19 @@ public class Encode
         return hex(bytes, "");
     }
 
+    public static boolean isHex (String test)
+    {
+        try {
+            int ll = test.length();
+            for (int ii = 0; ii < ll; ii++) {
+                digitVal(test.charAt(ii));
+            }
+            return true;
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
+    }
+
     public static byte[] unhex (String hex)
     {
         int ll = hex.length();
