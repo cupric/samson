@@ -9,7 +9,14 @@ import java.io.IOException;
 
 import samson.crypto.SecureUtil;
 import samson.util.Encode;
+import cli.MonoTouch.Foundation.NSData;
+import cli.MonoTouch.Security.SecKeyChain;
+import cli.MonoTouch.Security.SecKind;
+import cli.MonoTouch.Security.SecRecord;
+import cli.MonoTouch.Security.SecStatusCode;
 import cli.System.IO.MemoryStream;
+import cli.System.Convert;
+import cli.System.Runtime.InteropServices.Marshal;
 import cli.System.Security.Cryptography.CryptoStream;
 import cli.System.Security.Cryptography.CryptoStreamMode;
 import cli.System.Security.Cryptography.ICryptoTransform;
@@ -54,6 +61,43 @@ public class IOSSecureUtil extends SecureUtil
         byte[] secret = new byte[length];
         _rand.GetBytes(secret);
         return secret;
+    }
+
+    @Override public byte[] retrieveKey (String id)
+    {
+        // basic record to query for the key
+        SecRecord query = new SecRecord(SecKind.wrap(SecKind.GenericPassword));
+        query.set_Generic(NSData.FromString(id));
+
+        SecStatusCode[] status = {null};
+        SecRecord match = SecKeyChain.QueryAsRecord(query, status);
+        if (status[0].Value == SecStatusCode.Success) {
+            Log.log.debug("Successfully found existing encryption key");
+            // copy to bytes
+            NSData value = match.get_ValueData();
+            byte[] bytes = new byte[Convert.ToInt32(value.get_Length())];
+            Marshal.Copy(value.get_Bytes(), bytes, 0, bytes.length);
+            return bytes;
+        } else {
+            Log.log.debug("Failed to find encryption key in keychain", "error", status);
+            return null;
+        }
+    }
+
+    @Override public void storeKey (String id, byte[] value)
+    {
+        // insert a complete record
+        SecRecord rec = new SecRecord(SecKind.wrap(SecKind.GenericPassword));
+        rec.set_Generic(NSData.FromString(id));
+        rec.set_ValueData(NSData.FromArray(value));
+        rec.set_Comment("Please don't hack us =(");
+
+        SecStatusCode status = SecKeyChain.Add(rec);
+        if (status.Value != SecStatusCode.Success) {
+            Log.log.error("Failed to store encryption key in keychain", "error", status);
+        } else {
+            Log.log.debug("Successfully stored new encryption key");
+        }
     }
 
     protected byte[] doAES (boolean encrypting, byte[] key, byte[] contents) {
