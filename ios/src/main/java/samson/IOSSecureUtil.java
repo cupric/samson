@@ -8,6 +8,7 @@ package samson;
 import java.io.IOException;
 
 import samson.crypto.SecureUtil;
+import samson.util.Encode;
 import cli.System.IO.MemoryStream;
 import cli.System.Security.Cryptography.CryptoStream;
 import cli.System.Security.Cryptography.CryptoStreamMode;
@@ -38,8 +39,8 @@ public class IOSSecureUtil extends SecureUtil
         if (expString.length() % 2 != 0) {
             expString = "0" + expString;
         }
-        params.Modulus = unhexlate(modString);
-        params.Exponent = unhexlate(expString);
+        params.Modulus = Encode.unhex(modString);
+        params.Exponent = Encode.unhex(expString);
 
         RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
         rsa.ImportParameters(params);
@@ -72,20 +73,5 @@ public class IOSSecureUtil extends SecureUtil
         return transformed;
     }
 
-    protected static byte[] unhexlate (String hex) {
-        if (hex == null || (hex.length() % 2 != 0)) return null;
-        // convert to lowercase so things work
-        hex = hex.toLowerCase();
-        byte[] data = new byte[hex.length()/2];
-        for (int ii = 0; ii < hex.length(); ii+=2) {
-            int value = (byte)(XLATE.indexOf(hex.charAt(ii)) << 4);
-            value  += XLATE.indexOf(hex.charAt(ii+1));
-            // values over 127 are wrapped around, restoring negative bytes
-            data[ii/2] = (byte)value;
-        }
-        return data;
-    }
-
     protected RNGCryptoServiceProvider _rand = new RNGCryptoServiceProvider();
-    protected static final String XLATE = "0123456789abcdef";
 }
