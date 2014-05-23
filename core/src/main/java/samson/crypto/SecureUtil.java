@@ -7,6 +7,9 @@ package samson.crypto;
 
 import java.io.IOException;
 
+import playn.core.PlayN;
+import samson.util.Encode;
+
 /**
  * A port of Narya's SecureUtil that can be implemented in terms of a specific platform.
  */
@@ -27,6 +30,30 @@ public abstract class SecureUtil
      * Creates a random key.
      */
     public abstract byte[] createRandomKey (int length);
+
+    /**
+     * Retrieves the key from the keystore, if supported by the platform. Otherwise retrieves
+     * from the PlayN storage.
+     * @return the retrieved key, or null if not found
+     */
+    public byte[] retrieveKey (String id)
+    {
+        // TODO: support android?
+        String key = PlayN.storage().getItem(id);
+        return key == null ? null : Encode.unhex(key);
+    }
+
+    /**
+     * Stored the given key in the platform keystore, if supported. Otherwise retrieves stores in
+     * PlayN storage.
+     * @throws IOException if the key could not be stored
+     */
+    public void storeKey (String id, byte[] key)
+        throws IOException
+    {
+        // TODO: support android?
+        PlayN.storage().setItem(id, Encode.hex(key));
+    }
 
     /**
      * XORs a byte array against a key.
