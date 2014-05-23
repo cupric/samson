@@ -7,15 +7,13 @@ package samson;
 
 import java.io.IOException;
 
-import samson.crypto.SecureUtil;
-import samson.util.Encode;
 import cli.MonoTouch.Foundation.NSData;
 import cli.MonoTouch.Security.SecKeyChain;
 import cli.MonoTouch.Security.SecKind;
 import cli.MonoTouch.Security.SecRecord;
 import cli.MonoTouch.Security.SecStatusCode;
-import cli.System.IO.MemoryStream;
 import cli.System.Convert;
+import cli.System.IO.MemoryStream;
 import cli.System.Runtime.InteropServices.Marshal;
 import cli.System.Security.Cryptography.CryptoStream;
 import cli.System.Security.Cryptography.CryptoStreamMode;
@@ -24,6 +22,10 @@ import cli.System.Security.Cryptography.RNGCryptoServiceProvider;
 import cli.System.Security.Cryptography.RSACryptoServiceProvider;
 import cli.System.Security.Cryptography.RSAParameters;
 import cli.System.Security.Cryptography.RijndaelManaged;
+import samson.crypto.SecureUtil;
+import samson.util.Encode;
+
+import tripleplay.util.Logger;
 
 public class IOSSecureUtil extends SecureUtil
 {
@@ -68,35 +70,57 @@ public class IOSSecureUtil extends SecureUtil
         // basic record to query for the key
         SecRecord query = new SecRecord(SecKind.wrap(SecKind.GenericPassword));
         query.set_Generic(NSData.FromString(id));
+        query.set_Account(id);
+        query.set_Service(id);
 
         SecStatusCode[] status = {null};
         SecRecord match = SecKeyChain.QueryAsRecord(query, status);
         if (status[0].Value == SecStatusCode.Success) {
-            Log.log.debug("Successfully found existing encryption key");
+            Log.log.debug("Retrieved keychain item: " + id);
+
             // copy to bytes
             NSData value = match.get_ValueData();
             byte[] bytes = new byte[Convert.ToInt32(value.get_Length())];
             Marshal.Copy(value.get_Bytes(), bytes, 0, bytes.length);
             return bytes;
         } else {
-            Log.log.debug("Failed to find encryption key in keychain", "error", status);
+            Log.log.error("Failed to retrieve keychain item: " + id, "status", status[0].ToString());
             return null;
         }
     }
 
-    @Override public void storeKey (String id, byte[] value)
+    @Override public void storeKey (String id, byte[] value) throws IOException
     {
+        SecStatusCode status;
+
         // insert a complete record
         SecRecord rec = new SecRecord(SecKind.wrap(SecKind.GenericPassword));
         rec.set_Generic(NSData.FromString(id));
+        rec.set_Account(id);
+        rec.set_Service(id);
         rec.set_ValueData(NSData.FromArray(value));
         rec.set_Comment("Please don't hack us =(");
 
-        SecStatusCode status = SecKeyChain.Add(rec);
-        if (status.Value != SecStatusCode.Success) {
-            Log.log.error("Failed to store encryption key in keychain", "error", status);
+        // remove an existing record, if applicable
+        status = SecKeyChain.Remove(rec);
+        if (status.Value == SecStatusCode.Success) {
+            Log.log.debug("Removed keychain item: " + id);
+        } else if (status.Value == SecStatusCode.ItemNotFound) {
+            // noop
         } else {
-            Log.log.debug("Successfully stored new encryption key");
+            String error = Logger.format("Failed to remove keychain item: " + id, "status", status.ToString());
+            Log.log.error(error);
+            throw new IOException(error);
+        }
+
+        // insert the new record
+        status = SecKeyChain.Add(rec);
+        if (status.Value == SecStatusCode.Success) {
+            Log.log.debug("Stored keychain item: " + id);
+        } else {
+            String error = Logger.format("Failed to store keychain item: " + id, "status", status.ToString());
+            Log.log.error(error);
+            throw new IOException(error);
         }
     }
 
