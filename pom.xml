@@ -26,6 +26,7 @@
     <module>jvm</module>
     <module>java</module>
     <module>ios</module>
+    <module>android</module>
     <module>swt-java</module>
   </modules>
 
