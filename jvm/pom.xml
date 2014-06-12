@@ -6,26 +6,14 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>samson-java</artifactId>
-  <name>SamsoN Java</name>
+  <artifactId>samson-jvm</artifactId>
+  <name>SamsoN JVM</name>
 
   <dependencies>
     <dependency>
       <groupId>net.cupric</groupId>
-      <artifactId>samson-jvm</artifactId>
+      <artifactId>samson-core</artifactId>
       <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.googlecode.playn</groupId>
-      <artifactId>playn-java</artifactId>
-      <version>${playn.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.threerings</groupId>
-      <artifactId>tripleplay-java</artifactId>
-      <version>${tripleplay.version}</version>
     </dependency>
   </dependencies>
 </project>

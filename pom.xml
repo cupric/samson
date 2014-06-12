@@ -23,6 +23,7 @@
 
   <modules>
     <module>core</module>
+    <module>jvm</module>
     <module>java</module>
     <module>ios</module>
     <module>swt-java</module>

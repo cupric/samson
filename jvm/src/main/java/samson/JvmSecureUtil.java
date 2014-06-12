@@ -21,7 +21,7 @@ import samson.crypto.SecureUtil;
 
 import static samson.Log.log;
 
-public class JavaSecureUtil extends SecureUtil
+public class JvmSecureUtil extends SecureUtil
 {
     @Override public byte[] encryptAES (byte[] key, byte[] contents)
         throws IOException

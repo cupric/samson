@@ -22,10 +22,10 @@ import samson.util.Locale;
 import com.google.common.collect.Lists;
 
 /**
- * Java implementation of piracy formats.
+ * Java implementation of formats.
  * TODO: tablet: verify this works on android
  */
-public class JavaFormats
+public class JvmFormats
     implements DateTimeFormat, samson.text.NumberFormat, Comparator<String>
 {
     private DateFormat weekly, order, dfault, monthAndYear, dayOfWeek, full, dayOfWeekWithDate;
