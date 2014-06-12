@@ -8,6 +8,7 @@ package samson;
 import java.util.Comparator;
 
 import samson.crypto.SecureUtil;
+import samson.notify.Notifier;
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
 import samson.util.Locale;
@@ -60,6 +61,11 @@ public class Samson
          * Gets the secure utilities for the platform.
          */
         SecureUtil secureUtil ();
+
+        /**
+         * Gets the notifier for the platform.
+         */
+        Notifier notifier ();
     }
 
     /**
@@ -95,6 +101,10 @@ public class Samson
 
     public static SecureUtil secureUtil () {
         return _instance.secureUtil();
+    }
+
+    public static Notifier notifier () {
+        return _instance.notifier();
     }
 
     public static Platform platform () {

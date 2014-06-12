@@ -8,11 +8,14 @@ package samson;
 import java.util.Comparator;
 
 import playn.ios.IOSPlatform;
+
 import cli.MonoTouch.Foundation.NSLocale;
 import cli.System.IO.File;
 import cli.System.IO.Path;
 import samson.Samson.Platform;
 import samson.crypto.SecureUtil;
+import samson.notify.IOSNotifier;
+import samson.notify.Notifier;
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
 import samson.util.Locale;
@@ -59,6 +62,11 @@ public class IOSSamson implements Platform
         return _secureUtil;
     }
 
+    @Override
+    public Notifier notifier () {
+        return _notifier;
+    }
+
     private IOSFormats getFormats () {
         if (_locale == null) {
             setLocale(getDefaultLocale());
@@ -69,4 +77,5 @@ public class IOSSamson implements Platform
     private Locale _locale;
     private IOSFormats _formats = new IOSFormats();
     private IOSSecureUtil _secureUtil = new IOSSecureUtil();
+    private IOSNotifier _notifier = new IOSNotifier();
 }
