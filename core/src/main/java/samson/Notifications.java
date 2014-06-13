@@ -3,9 +3,9 @@
 // Copyright (c) 2014, Cupric - All rights reserved.
 // http://github.com/cupric/samson/blob/master/LICENSE
 
-package samson.notify;
+package samson;
 
-public abstract class Notifier
+public abstract class Notifications
 {
     public static interface Handle {
         public void cancel ();

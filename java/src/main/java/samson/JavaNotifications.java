@@ -3,15 +3,16 @@
 // Copyright (c) 2014, Cupric - All rights reserved.
 // http://github.com/cupric/samson/blob/master/LICENSE
 
-package samson.notify;
+package samson;
 
 import samson.Interval;
 import samson.Log;
+import samson.Notifications;
 
 /**
  * Notifier for debugging notifications. Issues a log message printout via an Interval.
  */
-public class JavaNotifier extends Notifier
+public class JavaNotifications extends Notifications
 {
     @Override
     public Handle schedule (long when, final String message) {

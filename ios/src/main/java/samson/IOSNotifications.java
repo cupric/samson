@@ -3,13 +3,14 @@
 // Copyright (c) 2014, Cupric - All rights reserved.
 // http://github.com/cupric/samson/blob/master/LICENSE
 
-package samson.notify;
+package samson;
 
+import samson.Notifications;
 import cli.MonoTouch.Foundation.NSDate;
 import cli.MonoTouch.UIKit.UIApplication;
 import cli.MonoTouch.UIKit.UILocalNotification;
 
-public class IOSNotifier extends Notifier
+public class IOSNotifications extends Notifications
 {
     @Override
     public Handle schedule (long when, String message) {

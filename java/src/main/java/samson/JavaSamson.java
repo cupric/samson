@@ -5,9 +5,6 @@
 
 package samson;
 
-import samson.notify.JavaNotifier;
-import samson.notify.Notifier;
-
 import playn.java.JavaPlatform;
 
 public class JavaSamson extends JvmSamson
@@ -19,13 +16,13 @@ public class JavaSamson extends JvmSamson
     }
 
     public JavaSamson () {
-        notifier = new JavaNotifier();
+        notifier = new JavaNotifications();
     }
 
     @Override
-    public Notifier notifier () {
+    public Notifications notifications () {
         return notifier;
     }
 
-    private final JavaNotifier notifier;
+    private final JavaNotifications notifier;
 }

@@ -5,19 +5,17 @@
 
 package samson;
 
-import samson.notify.AndroidNotifier;
-import samson.notify.Notifier;
 
 public class AndroidSamson extends JvmSamson
 {
     public AndroidSamson () {
-        notifier = new AndroidNotifier();
+        notifier = new AndroidNotifications();
     }
 
     @Override
-    public Notifier notifier () {
+    public Notifications notifications () {
         return notifier;
     }
 
-    private AndroidNotifier notifier;
+    private AndroidNotifications notifier;
 }

@@ -14,8 +14,6 @@ import cli.System.IO.File;
 import cli.System.IO.Path;
 import samson.Samson.Platform;
 import samson.crypto.SecureUtil;
-import samson.notify.IOSNotifier;
-import samson.notify.Notifier;
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
 import samson.util.Locale;
@@ -63,7 +61,7 @@ public class IOSSamson implements Platform
     }
 
     @Override
-    public Notifier notifier () {
+    public Notifications notifications () {
         return _notifier;
     }
 
@@ -77,5 +75,5 @@ public class IOSSamson implements Platform
     private Locale _locale;
     private IOSFormats _formats = new IOSFormats();
     private IOSSecureUtil _secureUtil = new IOSSecureUtil();
-    private IOSNotifier _notifier = new IOSNotifier();
+    private IOSNotifications _notifier = new IOSNotifications();
 }
