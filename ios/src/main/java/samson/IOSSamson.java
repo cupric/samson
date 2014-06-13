@@ -9,7 +9,10 @@ import java.util.Comparator;
 
 import playn.ios.IOSPlatform;
 
+import cli.MonoTouch.Foundation.NSDictionary;
 import cli.MonoTouch.Foundation.NSLocale;
+import cli.MonoTouch.UIKit.UIApplication;
+import cli.MonoTouch.UIKit.UILocalNotification;
 import cli.System.IO.File;
 import cli.System.IO.Path;
 import samson.Samson.Platform;
@@ -20,10 +23,30 @@ import samson.util.Locale;
 
 public class IOSSamson implements Platform
 {
+    public static IOSSamson platform () {
+        return (IOSSamson)Samson.platform();
+    }
+
     public static IOSSamson register (IOSPlatform platform) {
         IOSSamson samson = new IOSSamson();
         Samson.register(samson);
         return samson;
+    }
+
+    /**
+     * Lets the samson notifier know that the application has launched. The notifier will check for
+     * a notification and dispatch it if one was received.
+     */
+    public static void finishedLaunching (UIApplication app, NSDictionary options) {
+        platform().notifications().finishedLaunching(app, options);
+    }
+
+    /**
+     * Lets the samson notifier know that a local notification expired. The notifier will dispatch
+     * it appropriately.
+     */
+    public static void receivedLocalNotification (UIApplication app, UILocalNotification notif) {
+        platform().notifications().receivedLocalNotification(app, notif);
     }
 
     @Override
@@ -61,7 +84,7 @@ public class IOSSamson implements Platform
     }
 
     @Override
-    public Notifications notifications () {
+    public IOSNotifications notifications () {
         return _notifier;
     }
 

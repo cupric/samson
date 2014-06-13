@@ -10,7 +10,7 @@ import samson.Notifications;
 public class AndroidNotifications extends Notifications
 {
     @Override
-    public Handle schedule (long when, String message) {
+    public Handle schedule (long when, Builder builder) {
         // TODO: implement
         return new Handle() {
             @Override

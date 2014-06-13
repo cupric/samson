@@ -5,6 +5,8 @@
 
 package samson;
 
+import org.lwjgl.opengl.Display;
+
 import samson.Interval;
 import samson.Log;
 import samson.Notifications;
@@ -15,17 +17,22 @@ import samson.Notifications;
 public class JavaNotifications extends Notifications
 {
     @Override
-    public Handle schedule (long when, final String message) {
-        final Interval interval = new Interval() {
+    protected Handle schedule (long when, final Builder builder) {
+        final Interval interval = new Interval(Interval.PLAYN) {
             @Override
             public void expired () {
-                Log.log.info("Notification!", "message", message);
+                Log.log.info("Notification!", "message", builder._message);
+                dispatch(builder._data, Display.isActive());
             }
         };
+
+        Log.log.info("Scheduling notification", "id", builder._data.get(ID));
         interval.schedule(Math.max(0, when - System.currentTimeMillis()));
+
         return new Handle() {
             @Override
             public void cancel() {
+                Log.log.info("Cancelling notification", "id", builder._data.get(ID));
                 interval.cancel();
             }
         };
