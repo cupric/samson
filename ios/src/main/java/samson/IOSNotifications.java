@@ -13,8 +13,15 @@ import cli.MonoTouch.UIKit.UIApplication;
 import cli.MonoTouch.UIKit.UIApplicationState;
 import cli.MonoTouch.UIKit.UILocalNotification;
 
+/**
+ * Notifications for iOS.
+ */
 public class IOSNotifications extends Notifications
 {
+    /**
+     * Called to process notifications from launch, i.e. a user tapped a notification, which caused
+     * the app to launch.
+     */
     public void finishedLaunching (UIApplication app, NSDictionary options) {
         if (options == null) {
             return;

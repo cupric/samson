@@ -11,17 +11,41 @@ import com.google.common.collect.Maps;
 
 import react.RList;
 
+/**
+ * Interface for scheduling and handling notifications. Applications schedule notifications by
+ * creating a builder with {@link #builder()}, setting the desired fields, then invoking {@link
+ * Builder#schedule(long)}. The notification may be canceled. Incoming notifications may be polled
+ * or listened to using {@link #arrived()}.
+ * <p>Note: if an application schedules notifications, it must also listen for them and clear the
+ * queue.</p>
+ */
 public abstract class Notifications
 {
+    /**
+     * Refers to a previously scheduled notification and allows it to be cancelled. See {@link
+     * Builder#schedule(long)}.
+     */
     public static interface Handle {
+        /**
+         * Cancels the notification referenced by this handle.
+         */
         void cancel ();
     }
 
+    /**
+     * An incoming notification.
+     */
     public static final class Incoming {
+        /** The data returned by the system. This should match the data provided to the builder. */
         public final Map<String, String> data;
 
+        /** Whether the app was active when the notification was received. */
         public final boolean wasActive;
 
+        /**
+         * Gets the id of the notification. This is not required to be present or unique. Reflects
+         * the value given ni {@link Builder#id(String)}.
+         */
         public String id () {
             return data.get(ID);
         }
@@ -32,45 +56,86 @@ public abstract class Notifications
         }
     }
 
+    /**
+     * Builds notifications.
+     */
     public class Builder {
+        /**
+         * Sets the id of the notification. This is implemented as a {@link #data(String, String)}
+         * call with a fixed key. It is not required, but useful for most applications.
+         */
         public Builder id (String id) {
             return data(ID, id);
         }
 
+        /**
+         * Sets the sound path to use. For iOS, this is the path to a sound in the main bundle. By
+         * default, the system attempts to use the default notification sound.
+         * TODO: clarify differences among platforms.
+         */
         public Builder soundPath (String path) {
             _soundPath = path;
             return this;
         }
 
+        /**
+         * Sets the message to display when the notification is shown to the user.
+         */
         public Builder message (String message) {
             _message = message;
             return this;
         }
 
+        /**
+         * Sets a data field that is not shown to the user but is handed back to the application
+         * via {@link Incoming#data}.
+         */
         public Builder data (String key, String value) {
             _data.put(key, value);
             return this;
         }
 
+        /**
+         * Sets the notification to be silent.
+         */
         public Builder silent () {
             _silent = true;
             return this;
         }
 
+        /**
+         * Schedules the notification to popup at the given epoch milliseconds. For example,
+         * {@code System.currentTimeMillis() + 60000} for one minute from now.
+         */
         public Handle schedule (long time) {
             return Notifications.this.schedule(time, this);
         }
 
+        /** The message. */
         protected String _message;
+
+        /** The sound path. */
         protected String _soundPath;
+
+        /** Whether the notification is silent. */
         protected boolean _silent;
+
+        /** The data to associate. */
         protected Map<String, String> _data = Maps.newHashMap();
     }
 
+    /**
+     * Creates a new builder for a notification. Once the fields are set, {@link
+     * Builder#schedule(long)} fires the notification off to the system.
+     */
     public Builder builder () {
         return new Builder();
     }
 
+    /**
+     * List of notifications received from the system. Applications should remove from this
+     * appropriately, either using a listener, or periodically.
+     */
     public RList<Incoming> arrived () {
         return _incoming;
     }
@@ -81,6 +146,9 @@ public abstract class Notifications
 
     protected abstract Handle schedule (long when, Builder builder);
 
+    /** The list of notifications received from the system. */
     protected final RList<Incoming> _incoming = RList.create();
+
+    /** Key for our notification id value. */
     protected static final String ID = "notifier_id";
 }

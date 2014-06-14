@@ -14,8 +14,14 @@ import cli.MonoTouch.Foundation.NSMutableDictionary;
 import cli.MonoTouch.Foundation.NSObject;
 import cli.MonoTouch.Foundation.NSString;
 
+/**
+ * Useful things for dealing with monotouch from java.
+ */
 public class IOSTypes
 {
+    /**
+     * Creates a hash map copied from an iOS dictionary.
+     */
     public static Map<String, String> toMap (NSDictionary dict) {
         Map<String, String> result = Maps.newHashMap();
         for (NSObject key : dict.get_Keys()) {
@@ -27,6 +33,9 @@ public class IOSTypes
         return result;
     }
 
+    /**
+     * Creates an iOS dictionary copied from a hash map.
+     */
     public static NSDictionary toDict (Map<String, String> map)
     {
         NSMutableDictionary result = new NSMutableDictionary();
