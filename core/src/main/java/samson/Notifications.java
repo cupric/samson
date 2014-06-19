@@ -140,6 +140,11 @@ public abstract class Notifications
         return _incoming;
     }
 
+    /**
+     * Cancels all pending notifications.
+     */
+    public abstract void cancelAll ();
+
     protected void dispatch (Map<String, String> data, boolean active) {
         _incoming.add(new Incoming(data, active));
     }

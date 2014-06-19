@@ -45,7 +45,12 @@ public class IOSNotifications extends Notifications
     }
 
     @Override
-    public Handle schedule (long when, Builder builder) {
+    public void cancelAll () {
+        UIApplication.get_SharedApplication().CancelAllLocalNotifications();
+    }
+
+    @Override
+    protected Handle schedule (long when, Builder builder) {
         final UILocalNotification notif = new UILocalNotification();
         notif.set_FireDate(NSDate.FromTimeIntervalSince1970((double)when / 1000));
         notif.set_AlertBody(builder._message);
