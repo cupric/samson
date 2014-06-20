@@ -6,6 +6,7 @@
 package samson;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 import playn.ios.IOSPlatform;
 
@@ -19,7 +20,6 @@ import samson.Samson.Platform;
 import samson.crypto.SecureUtil;
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
-import samson.util.Locale;
 
 public class IOSSamson implements Platform
 {
@@ -56,7 +56,7 @@ public class IOSSamson implements Platform
 
     @Override
     public Locale getDefaultLocale () {
-        return Locale.createLocale(NSLocale.get_CurrentLocale().get_LocaleIdentifier());
+        return new Locale(NSLocale.get_CurrentLocale().get_LocaleIdentifier());
     }
 
     @Override

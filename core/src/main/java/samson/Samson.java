@@ -6,11 +6,11 @@
 package samson;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 import samson.crypto.SecureUtil;
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
-import samson.util.Locale;
 
 /**
  * Main entry point for samson cross-platform features. All platform-specific methods are defined

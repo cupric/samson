@@ -6,11 +6,11 @@
 package samson;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 import samson.crypto.SecureUtil;
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
-import samson.util.Locale;
 
 public abstract class JvmSamson implements Samson.Platform
 {
@@ -27,7 +27,7 @@ public abstract class JvmSamson implements Samson.Platform
 
     @Override
     public Locale getDefaultLocale () {
-        return Locale.createLocale(java.util.Locale.getDefault().toString());
+        return Locale.getDefault();
     }
 
     @Override

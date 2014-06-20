@@ -15,9 +15,9 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import samson.text.DateTimeFormat;
-import samson.util.Locale;
 
 import com.google.common.collect.Lists;
 

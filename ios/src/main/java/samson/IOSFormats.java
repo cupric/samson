@@ -10,10 +10,10 @@ import ikvm.lang.CIL;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.Locale;
 
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
-import samson.util.Locale;
 import cli.System.DateTime;
 import cli.System.Globalization.NumberStyles;
 import cli.System.Int32;
@@ -53,7 +53,7 @@ public class IOSFormats
     public void setLocale (Locale locale)
     {
         try {
-            cinfo = CultureInfo.GetCultureInfo(locale.getLocaleCode());
+            cinfo = CultureInfo.GetCultureInfo(locale.toString().replace("_", "-"));
             if (cinfo.get_IsNeutralCulture() && locale.getLanguage().equals("en")) {
                 // TODO: tablet: choose between GB & US
                 log.warning("en language is neutral, falling back to US english");
