@@ -184,8 +184,8 @@ public class MessageBundle
     }
 
     /**
-     * Translates a string with automatic ordinality. For example, for the key {@code m.foo},
-     * {@code m.foo.0} will be used if count is zero. {@code m.foo.1} if count is 1 and
+     * Translates a string with automatic variants for the given number. For example, for the key
+     * {@code m.foo}, {@code m.foo.0} if count is zero. {@code m.foo.1} will be used if count is 1.
      * {@code m.foo.n} will be used if count is 2 or more.
      *
      * <p>NOTE: the count is passed in as an argument to translate the selected ordinal string,
@@ -193,7 +193,7 @@ public class MessageBundle
      * would have <code>{1}</code> and normally not contain <code>{0}</code>. {@code m.foo.n}
      * would contain both <code>{0}</code> and <code>{1}</code>.</p>
      */
-    public String ordinal (String key, int count, Object... args) {
+    public String getByCount (String key, int count, Object... args) {
         Object[] nargs = new Object[args.length + 1];
         System.arraycopy(args, 0, nargs, 1, args.length);
         nargs[0] = count;
