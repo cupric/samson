@@ -9,13 +9,12 @@ import ikvm.lang.CIL;
 
 import java.util.Comparator;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.Locale;
 
 import samson.text.DateTimeFormat;
 import samson.text.NumberFormat;
-import cli.System.DateTime;
 import cli.System.Globalization.NumberStyles;
+import cli.System.DateTimeOffset;
 import cli.System.Int32;
 import cli.System.TimeSpan;
 import cli.System.Globalization.CultureInfo;
@@ -29,16 +28,13 @@ public class IOSFormats
     private String weekly, order;
 
     // January 1, 1970, 00:00:00 GMT
-    public static final long EPOCH = new DateTime(1970, 1, 1, 0, 0, 0).get_Ticks();
+    public static final long EPOCH = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero).get_Ticks();
 
-    private DateTime convert (Date date)
+    private DateTimeOffset convert (Date date)
     {
-        // convert to the time zone of the device
-        TimeZone zone = TimeZone.getDefault();
-        long ms = date.getTime();
-        ms += zone.getOffset(ms);
-        // convert to ticks relative to the epoch
-        return new DateTime(EPOCH + ms * TimeSpan.TicksPerMillisecond);
+        DateTimeOffset dt = new DateTimeOffset(
+            EPOCH + date.getTime() * TimeSpan.TicksPerMillisecond, TimeSpan.Zero);
+        return dt.ToLocalTime();
     }
 
     public IOSFormats ()
@@ -151,6 +147,7 @@ public class IOSFormats
     @Override
     public String fullDate (Date date)
     {
+        log.info("fullDate called", "date", date.getTime());
         return convert(date).ToString("D", cinfo);
     }
 
@@ -163,7 +160,7 @@ public class IOSFormats
     @Override
     public Date midnight (Date date)
     {
-        DateTime dt = convert(date);
+        DateTimeOffset dt = convert(date);
         dt = dt.Subtract(dt.get_TimeOfDay());
         return new Date((dt.get_Ticks() - EPOCH) / TimeSpan.TicksPerMillisecond);
     }
