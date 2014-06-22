@@ -8,10 +8,35 @@ package samson.text;
 import java.util.Date;
 
 /**
- * Date and time formatting methods.
+ * Date and time formatting methods. All method that consume a {@link Date} object assume the
+ * data is in UTC and format the string using the local time zone.
  */
 public interface DateTimeFormat
 {
+    /**
+     * Represents local time in the Gregorian calendar.
+     */
+    public static class LocalTime
+    {
+        /** Year, e.g. 2014. */
+        public short year;
+
+        /** Month, 1 = January. */
+        public byte month;
+
+        /** Day of month, from 1. */
+        public byte day;
+
+        /** Hour, 0-23. */
+        public byte hour;
+
+        /** Minute, 0-59. */
+        public byte minute;
+
+        /** Second, 0-59. */
+        public byte second;
+    }
+
     /**
      * Formats the given date as a full date and a short time of day,
      * e.g. August 25th, 2012 5:30 AM.
@@ -56,4 +81,9 @@ public interface DateTimeFormat
      * platform-specific due to the way time zones are accessed.
      */
     Date midnight (Date date);
+
+    /**
+     * Converts the given date to local time, using the system's local time zone.
+     */
+    LocalTime toLocal (Date date);
 }

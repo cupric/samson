@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -173,5 +174,20 @@ public class JvmFormats
     public String dollars (Number n)
     {
         return dollars.format(n);
+    }
+
+    @Override
+    public LocalTime toLocal (Date date)
+    {
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(date);
+        LocalTime time = new LocalTime();
+        time.year = (short)cal.get(Calendar.YEAR);
+        time.month = (byte)cal.get(Calendar.MONTH);
+        time.day = (byte)cal.get(Calendar.DAY_OF_MONTH);
+        time.hour = (byte)cal.get(Calendar.HOUR);
+        time.minute = (byte)cal.get(Calendar.MINUTE);
+        time.second = (byte)cal.get(Calendar.SECOND);
+        return time;
     }
 }

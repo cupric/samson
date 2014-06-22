@@ -170,4 +170,18 @@ public class IOSFormats
     {
         return cinfo.get_CompareInfo().Compare(a, b);
     }
+
+    @Override
+    public LocalTime toLocal (Date date)
+    {
+        DateTimeOffset dt = convert(date);
+        LocalTime time = new LocalTime();
+        time.year = (short)dt.get_Year();
+        time.month = (byte)dt.get_Month();
+        time.day = (byte)dt.get_Day();
+        time.hour = (byte)dt.get_Hour();
+        time.minute = (byte)dt.get_Minute();
+        time.second = (byte)dt.get_Second();
+        return time;
+    }
 }
