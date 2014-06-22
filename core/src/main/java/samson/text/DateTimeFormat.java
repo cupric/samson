@@ -77,12 +77,6 @@ public interface DateTimeFormat
     String dateWithDayOfWeek (Date date);
 
     /**
-     * Returns a date representing midnight of the given date in the local time zone. This is
-     * platform-specific due to the way time zones are accessed.
-     */
-    Date midnight (Date date);
-
-    /**
      * Converts the given date to local time, using the system's local time zone.
      */
     LocalTime toLocal (Date date);

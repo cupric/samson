@@ -158,14 +158,6 @@ public class IOSFormats
     }
 
     @Override
-    public Date midnight (Date date)
-    {
-        DateTimeOffset dt = convert(date);
-        dt = dt.Subtract(dt.get_TimeOfDay());
-        return new Date((dt.get_Ticks() - EPOCH) / TimeSpan.TicksPerMillisecond);
-    }
-
-    @Override
     public int compare (String a, String b)
     {
         return cinfo.get_CompareInfo().Compare(a, b);

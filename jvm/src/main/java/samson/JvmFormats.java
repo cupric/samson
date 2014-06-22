@@ -154,17 +154,6 @@ public class JvmFormats
     }
 
     @Override
-    public Date midnight (Date date)
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(date.getTime() - date.getTime() % 1000);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        return cal.getTime();
-    }
-
-    @Override
     public int compare (String a, String b)
     {
         return collator.compare(a,  b);
