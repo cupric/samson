@@ -7,7 +7,6 @@ package samson.text;
 
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import com.google.common.base.Joiner;
@@ -125,12 +124,8 @@ public class MessageBundle
      * exist.
      */
     public String getResourceString (String key, boolean reportMissing) {
-        try {
-            if (_bundle != null) {
-                return _bundle.getString(key);
-            }
-        } catch (MissingResourceException mre) {
-            // fall through and try the parent
+        if (_bundle.containsKey(key)) {
+            return _bundle.getString(key);
         }
 
         // if we have a parent, try getting the string from them
