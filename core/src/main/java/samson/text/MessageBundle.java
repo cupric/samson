@@ -209,7 +209,7 @@ public class MessageBundle
      * for keys with each numeric suffix until one is not found.
      * <p>TODO: add optional weights like in puzzle pirates?</p>
      */
-    public String random (String prefix, Randoms rng, Object... args) {
+    public String getRandom (String prefix, Randoms rng, Object... args) {
         // buffer for analyzing keys
         StringBuilder key = new StringBuilder(prefix).append(".");
 
@@ -219,7 +219,7 @@ public class MessageBundle
         do {
             key.setLength(len);
             key.append(++count);
-        } while (exists(prefix.toString()));
+        } while (exists(key.toString()));
 
         // warn if none
         if (count == 0) {
@@ -229,7 +229,7 @@ public class MessageBundle
 
         // select a random one and translate it
         key.setLength(len);
-        key.setLength(rng.getInt(count));
+        key.append(rng.getInt(count));
         return get(key.toString(), args);
     }
 
