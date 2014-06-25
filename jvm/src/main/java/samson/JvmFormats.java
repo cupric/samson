@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import samson.text.DateTimeFormat;
 
@@ -33,6 +35,7 @@ public class JvmFormats
     private NumberFormat integer, general, percent, dollars;
     private List<NumberFormat> decimals = Lists.newArrayList();
     private Collator collator = Collator.getInstance();
+    private char timeSeparator;
 
     public void setLocale (Locale locale) {
         java.util.Locale jlocale = new java.util.Locale(locale.getLanguage());
@@ -59,6 +62,17 @@ public class JvmFormats
             order = new SimpleDateFormat("MMM dd h:mm a", jlocale);
         }
 
+        // hack out the time separator since java doesn't provide it directly
+        String sampleTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(0));
+        Matcher matcher = Pattern.compile(".*[0-9](.)[0-9].*").matcher(sampleTime);
+        if (matcher.matches()) {
+            timeSeparator = matcher.group(1).charAt(0);
+        } else {
+            Log.log.warning("No time separator found, falling back to :", "sample", sampleTime,
+                "locale", locale);
+            timeSeparator = ':';
+        }
+
         try {
             SimpleDateFormat formatter =
                 (SimpleDateFormat) java.text.DateFormat.getDateInstance(DateFormat.FULL, jlocale);
@@ -77,6 +91,11 @@ public class JvmFormats
     @Override
     public String weekly (Date date) {
         return weekly.format(date);
+    }
+
+    @Override
+    public char timeSeparator () {
+        return timeSeparator;
     }
 
     @Override

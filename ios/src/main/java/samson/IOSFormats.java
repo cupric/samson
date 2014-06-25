@@ -158,6 +158,12 @@ public class IOSFormats
     }
 
     @Override
+    public char timeSeparator ()
+    {
+        return cinfo.get_DateTimeFormat().get_TimeSeparator().charAt(0);
+    }
+
+    @Override
     public int compare (String a, String b)
     {
         return cinfo.get_CompareInfo().Compare(a, b);

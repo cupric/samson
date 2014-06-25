@@ -77,6 +77,12 @@ public interface DateTimeFormat
     String dateWithDayOfWeek (Date date);
 
     /**
+     * Returns the character used as a time separator in the current locale. This is useful for
+     * manually formatting time spans.
+     */
+    char timeSeparator ();
+
+    /**
      * Converts the given date to local time, using the system's local time zone.
      */
     LocalTime toLocal (Date date);
