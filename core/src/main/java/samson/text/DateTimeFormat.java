@@ -35,6 +35,10 @@ public interface DateTimeFormat
 
         /** Second, 0-59. */
         public byte second;
+
+        @Override public String toString () {
+            return "LocalTime [" + day + "/" + month + "/" + year + " " + hour + ":" + minute + ":" + second + "]";
+        }
     }
 
     /**

@@ -111,6 +111,11 @@ public abstract class Notifications
             return Notifications.this.schedule(time, this);
         }
 
+        @Override public String toString () {
+            return "Builder [_message=" + _message + ", _soundPath=" + _soundPath + ", _silent="
+                + _silent + ", _data=" + _data + "]";
+        }
+
         /** The message. */
         protected String _message;
 
