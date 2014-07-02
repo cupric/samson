@@ -20,9 +20,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import samson.text.DateTimeFormat;
-
 import com.google.common.collect.Lists;
+
+import samson.text.DateTimeFormat;
 
 /**
  * Java implementation of formats.
@@ -193,7 +193,7 @@ public class JvmFormats
         time.year = (short)cal.get(Calendar.YEAR);
         time.month = (byte)cal.get(Calendar.MONTH);
         time.day = (byte)cal.get(Calendar.DAY_OF_MONTH);
-        time.hour = (byte)cal.get(Calendar.HOUR);
+        time.hour = (byte)cal.get(Calendar.HOUR_OF_DAY);
         time.minute = (byte)cal.get(Calendar.MINUTE);
         time.second = (byte)cal.get(Calendar.SECOND);
         return time;
