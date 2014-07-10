@@ -38,32 +38,31 @@ public class JvmFormats
     private char timeSeparator;
 
     public void setLocale (Locale locale) {
-        java.util.Locale jlocale = new java.util.Locale(locale.getLanguage());
-        collator = Collator.getInstance(jlocale);
-        dfault = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, jlocale);
-        integer = NumberFormat.getIntegerInstance();
-        general = NumberFormat.getInstance();
-        percent = NumberFormat.getPercentInstance();
-        dayOfWeek = new SimpleDateFormat("EEEE", jlocale);
-        full = DateFormat.getDateInstance(DateFormat.LONG, jlocale);
-        dayOfWeekWithDate = new SimpleDateFormat("EEE, MMM dd", jlocale);
+        collator = Collator.getInstance(locale);
+        dfault = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, locale);
+        integer = NumberFormat.getIntegerInstance(locale);
+        general = NumberFormat.getInstance(locale);
+        percent = NumberFormat.getPercentInstance(locale);
+        dayOfWeek = new SimpleDateFormat("EEEE", locale);
+        full = DateFormat.getDateInstance(DateFormat.LONG, locale);
+        dayOfWeekWithDate = new SimpleDateFormat("EEE, MMM dd", locale);
         dollars = NumberFormat.getCurrencyInstance(java.util.Locale.US); // always US
 
         if (locale.getLanguage().equals("ja")) {
-            weekly = new SimpleDateFormat("EEE HH:mm", jlocale);
-            order = new SimpleDateFormat("MM/dd H:mm", jlocale);
+            weekly = new SimpleDateFormat("EEE HH:mm", locale);
+            order = new SimpleDateFormat("MM/dd H:mm", locale);
 
         } else if (locale.getLanguage().equals("de")) {
-            weekly = new SimpleDateFormat("EEE H:mm", jlocale);
-            order = new SimpleDateFormat("MMM dd HH:mm", jlocale);
+            weekly = new SimpleDateFormat("EEE H:mm", locale);
+            order = new SimpleDateFormat("MMM dd HH:mm", locale);
 
         } else {
-            weekly = new SimpleDateFormat("EEE h:mm a", jlocale);
-            order = new SimpleDateFormat("MMM dd h:mm a", jlocale);
+            weekly = new SimpleDateFormat("EEE h:mm a", locale);
+            order = new SimpleDateFormat("MMM dd h:mm a", locale);
         }
 
         // hack out the time separator since java doesn't provide it directly
-        String sampleTime = DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(0));
+        String sampleTime = DateFormat.getTimeInstance(DateFormat.SHORT, locale).format(new Date(0));
         Matcher matcher = Pattern.compile(".*[0-9](.)[0-9].*").matcher(sampleTime);
         if (matcher.matches()) {
             timeSeparator = matcher.group(1).charAt(0);
@@ -75,16 +74,16 @@ public class JvmFormats
 
         try {
             SimpleDateFormat formatter =
-                (SimpleDateFormat) java.text.DateFormat.getDateInstance(DateFormat.FULL, jlocale);
-            String pattern = formatter.toPattern().toLowerCase(jlocale);
+                (SimpleDateFormat) java.text.DateFormat.getDateInstance(DateFormat.FULL, locale);
+            String pattern = formatter.toPattern().toLowerCase(locale);
             if (pattern.indexOf('m') < pattern.indexOf('y')) {
-                monthAndYear = new SimpleDateFormat("MMMM yyyy", jlocale);
+                monthAndYear = new SimpleDateFormat("MMMM yyyy", locale);
             } else {
-                monthAndYear = new SimpleDateFormat("yyyy MMMM", jlocale);
+                monthAndYear = new SimpleDateFormat("yyyy MMMM", locale);
             }
         } catch (ClassCastException cce) {
             // Shit, it was too exotic a locale. Oh well. We'll fall back to a default
-            monthAndYear = new SimpleDateFormat("MMMM yyyy", jlocale);
+            monthAndYear = new SimpleDateFormat("MMMM yyyy", locale);
         }
     }
 
