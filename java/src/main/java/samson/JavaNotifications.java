@@ -6,6 +6,7 @@
 package samson;
 
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
 
@@ -25,11 +26,14 @@ public class JavaNotifications extends Notifications
     }
 
     @Override
-    protected Handle schedule (long when, final Builder builder) {
-        final Interval interval = new Interval(Interval.PLAYN) {
+    protected Handle schedule (long when, Builder builder) {
+        final String message = builder._message;
+        final Map<String, String> data = builder._data;
+
+        final Interval interval = new Interval() {
             @Override
             public void expired () {
-                dispatch(builder._data, Display.isActive());
+                dispatch(data, Display.isActive());
                 _scheduled.remove(this);
             }
         };
