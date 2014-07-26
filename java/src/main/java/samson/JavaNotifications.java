@@ -33,17 +33,20 @@ public class JavaNotifications extends Notifications
         final Interval interval = new Interval() {
             @Override
             public void expired () {
+                Log.log.info("Notification!", "data", data, "message", message);
                 dispatch(data, Display.isActive());
                 _scheduled.remove(this);
             }
         };
 
+        Log.log.debug("Scheduling notification", "data", data, "message", message, "when", when);
         interval.schedule(Math.max(0, when - System.currentTimeMillis()));
         _scheduled.add(interval);
 
         return new Handle() {
             @Override
             public void cancel() {
+                Log.log.debug("Cancelling notification", "data", data, "message", message);
                 interval.cancel();
                 _scheduled.remove(interval);
             }
