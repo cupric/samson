@@ -6,11 +6,14 @@
 package samson.text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
 import samson.Samson;
+
+import static samson.text.Log.log;
 
 /**
  * Utility functions for translation string handling.
@@ -291,17 +294,22 @@ public class Messages
         try {
             int index = Integer.parseInt(pattern.substring(start, off));
             if (index < 0 || index >= args.length) {
-                error("Not enough arguments (got " + args.length + ")", pattern ,start);
+                error("Not enough arguments", pattern, start, "index", index, "length", args.length);
+                return;
             }
             result.append(args[index]);
         } catch (NumberFormatException e) {
-            error("Expected a numeric index in format element", pattern, start);
+            error("Expected a numeric index in format element", pattern, start, "end", off);
+            return;
         }
     }
 
-    private static void error (String str, String pattern, int offset) {
-        throw new IllegalArgumentException(
-            str + " in pattern \"" + pattern + "\", offset " + offset);
+    private static void error (String str, String pattern, int offset, Object... args) {
+        List<Object> nargs = Lists.<Object>newArrayList("pattern", pattern, "offset", offset);
+        nargs.addAll(Arrays.asList(args));
+
+        // just debug log this, it should be obvious in the game
+        log.debug(str, nargs.toArray());
     }
 
     /** Text prefixed by this character will be considered tainted when doing recursive

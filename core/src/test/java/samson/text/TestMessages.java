@@ -21,6 +21,9 @@ public class TestMessages
         assertFmt("''{1}''", args, "''bar''");
         assertFmt("{0}", new Object[] {9.2}, "9.2");
         assertFmt("{0}{1}", new Object[] {"{1}", "foo"}, "{1}foo");
+        assertFmt("no format here", new Object[] {}, "no format here");
+        Assert.assertTrue(Messages.format("missing {0}").startsWith("missing"));
+        Assert.assertTrue(Messages.format("extra {0}", args).equals("extra foo"));
     }
 
     private void assertFmt (String fmt, Object[] args, String expected) {
