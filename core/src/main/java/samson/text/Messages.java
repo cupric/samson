@@ -251,7 +251,7 @@ public class Messages
      *  a format that is not a simple integer, or a missing close brace
      */
     public static String format (String pattern, Object... args) {
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = null;
         for (int off = 0, len = pattern.length(); off < len; ++off) {
             char ch = pattern.charAt(off);
             int close = off;
@@ -260,16 +260,26 @@ public class Messages
                 close = pattern.indexOf('}', off + 1);
                 if (close == -1) {
                     error("Close brace is missing", pattern, off);
+                    return pattern;
+                }
+                // to save garbage collection, lazily create the result buffer
+                if (result == null) {
+                    // initialize with the contents thus far
+                    result = new StringBuilder();
+                    result.append(pattern, 0, off);
                 }
                 subformat(pattern, off + 1, close, args, result);
 
             } else {
-                result.append(ch);
+                if (result != null) {
+                    result.append(ch);
+                }
             }
+
             off = close;
         }
 
-        return result.toString();
+        return result == null ? pattern : result.toString();
     }
 
     private static void subformat (String pattern, int start, int end, Object[] args,
