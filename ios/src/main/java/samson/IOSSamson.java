@@ -50,13 +50,18 @@ public class IOSSamson implements Platform
     }
 
     @Override
-    public void setLocale (Locale locale) {
+    public void setFormattingLocale (Locale locale) {
         _formats.setLocale(_locale = locale);
     }
 
     @Override
-    public Locale getDefaultLocale () {
+    public Locale getDeviceLocale () {
         return new Locale(NSLocale.get_CurrentLocale().get_LocaleIdentifier());
+    }
+
+    @Override
+    public String getPreferredLanguage () {
+        return NSLocale.get_PreferredLanguages()[0];
     }
 
     @Override
@@ -90,7 +95,7 @@ public class IOSSamson implements Platform
 
     private IOSFormats getFormats () {
         if (_locale == null) {
-            setLocale(getDefaultLocale());
+            setFormattingLocale(getDeviceLocale());
         }
         return _formats;
     }

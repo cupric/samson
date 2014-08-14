@@ -29,12 +29,18 @@ public class Samson
         /**
          * Sets the locale to use when formatting dates, times and numbers.
          */
-        void setLocale (Locale locale);
+        void setFormattingLocale (Locale locale);
 
         /**
-         * Gets the default locale for this environment.
+         * Gets the locale for the device.
          */
-        Locale getDefaultLocale ();
+        Locale getDeviceLocale ();
+
+        /**
+         * Gets the preferred language for the device. Usually, the one that is selected in device
+         * preferences.
+         */
+        String getPreferredLanguage ();
 
         /**
          * Gets implementation of number formatting for the platform.
@@ -74,12 +80,16 @@ public class Samson
         _instance = instance;
     }
 
-    public static void setLocale (Locale locale) {
-        _instance.setLocale(locale);
+    public static void setFormattingLocale (Locale locale) {
+        _instance.setFormattingLocale(locale);
     }
 
-    public static Locale getDefaultLocale () {
-        return _instance.getDefaultLocale();
+    public static Locale getDeviceLocale () {
+        return _instance.getDeviceLocale();
+    }
+
+    public static String getPreferredLanguage () {
+        return _instance.getPreferredLanguage();
     }
 
     public static NumberFormat numberFormat () {

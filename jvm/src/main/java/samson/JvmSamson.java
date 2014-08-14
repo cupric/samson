@@ -21,13 +21,18 @@ public abstract class JvmSamson implements Samson.Platform
     }
 
     @Override
-    public void setLocale (Locale locale) {
+    public void setFormattingLocale (Locale locale) {
         _formats.setLocale(_locale = locale);
     }
 
     @Override
-    public Locale getDefaultLocale () {
+    public Locale getDeviceLocale () {
         return Locale.getDefault();
+    }
+
+    @Override
+    public String getPreferredLanguage () {
+        return Locale.getDefault().getLanguage();
     }
 
     @Override
@@ -52,7 +57,7 @@ public abstract class JvmSamson implements Samson.Platform
 
     private JvmFormats getFormats () {
         if (_locale == null) {
-            setLocale(getDefaultLocale());
+            setFormattingLocale(getDeviceLocale());
         }
         return _formats;
     }
