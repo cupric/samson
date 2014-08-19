@@ -63,6 +63,8 @@ public abstract class Notifications
         /**
          * Sets the id of the notification. This is implemented as a {@link #data(String, String)}
          * call with a fixed key. It is not required, but useful for most applications.
+         *
+         * <p>Applicable platforms: iOS, Android</p>
          */
         public Builder id (String id) {
             return data(ID, id);
@@ -71,7 +73,9 @@ public abstract class Notifications
         /**
          * Sets the sound path to use. For iOS, this is the path to a sound in the main bundle. By
          * default, the system attempts to use the default notification sound.
-         * TODO: clarify differences among platforms.
+         * TODO: support Android
+         *
+         * <p>Applicable platforms: iOS</p>
          */
         public Builder soundPath (String path) {
             _soundPath = path;
@@ -79,10 +83,56 @@ public abstract class Notifications
         }
 
         /**
-         * Sets the message to display when the notification is shown to the user.
+         * Sets the notification to be silent.
+         * TODO: support Android
+         *
+         * <p>Applicable platforms: iOS</p>
+         */
+        public Builder silent () {
+            _silent = true;
+            return this;
+        }
+
+        /**
+         * Sets the message to display when the notification is shown to the user. This is required
+         * for Android.
+         *
+         * <p>Applicable platforms: iOS, Android</p>
          */
         public Builder message (String message) {
             _message = message;
+            return this;
+        }
+
+        /**
+         * Sets the icon resource to display when the notification is shown to the user. This is
+         * required for Android.
+         *
+         * <p>Applicable platforms: Android</p>
+         */
+        public Builder icon (int resource) {
+            _icon = resource;
+            return this;
+        }
+
+        /**
+         * Sets the title to display when the notification is shown to the user. This is required
+         * for Android.
+         *
+         * <p>Applicable platforms: Android</p>
+         */
+        public Builder title (String title) {
+            _title = title;
+            return this;
+        }
+
+        /**
+         * Sets the notification to vibrate or not.
+         *
+         * <p>Applicable platforms: Android</p>
+         */
+        public Builder vibrate (boolean vibrate) {
+            _vibrate = vibrate;
             return this;
         }
 
@@ -92,14 +142,6 @@ public abstract class Notifications
          */
         public Builder data (String key, String value) {
             _data.put(key, value);
-            return this;
-        }
-
-        /**
-         * Sets the notification to be silent.
-         */
-        public Builder silent () {
-            _silent = true;
             return this;
         }
 
@@ -119,11 +161,20 @@ public abstract class Notifications
         /** The message. */
         protected String _message;
 
+        /** Icon on the Android notification. */
+        protected int _icon;
+
+        /** Title used on the Android notification. */
+        protected String _title;
+
         /** The sound path. */
         protected String _soundPath;
 
         /** Whether the notification is silent. */
         protected boolean _silent;
+
+        /** Whether the notification should vibrate the device. */
+        protected boolean _vibrate = true;
 
         /** The data to associate. */
         protected Map<String, String> _data = Maps.newHashMap();

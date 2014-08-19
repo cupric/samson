@@ -24,6 +24,20 @@
       <artifactId>playn-android</artifactId>
       <version>${playn.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>android</artifactId>
+      <version>${android.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- com.android.support:support-v4:jar:19.0.1:compile-->
+    <dependency>
+      <groupId>com.android.support</groupId>
+      <artifactId>support-v4</artifactId>
+      <version>19.0.1</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>

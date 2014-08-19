@@ -5,11 +5,12 @@
 
 package samson;
 
+import android.app.Activity;
 
 public class AndroidSamson extends JvmSamson
 {
-    public AndroidSamson () {
-        notifier = new AndroidNotifications();
+    public AndroidSamson (Activity mainActivity) {
+        notifier = new AndroidNotifications(mainActivity);
     }
 
     @Override
