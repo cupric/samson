@@ -24,5 +24,14 @@ public class JavaSamson extends JvmSamson
         return notifier;
     }
 
+    @Override
+    public boolean hasMailAccount () {
+        return false;
+    }
+
+    @Override
+    public void startMailMessage (String subject, String[] to, String body) {
+    }
+
     private final JavaNotifications notifier;
 }

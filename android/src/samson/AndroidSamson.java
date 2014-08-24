@@ -18,5 +18,16 @@ public class AndroidSamson extends JvmSamson
         return notifier;
     }
 
+    @Override
+    public boolean hasMailAccount () {
+        // TODO: implement
+        return false;
+    }
+
+    @Override
+    public void startMailMessage (String subject, String[] to, String body) {
+        // TODO: implement
+    }
+
     private AndroidNotifications notifier;
 }

@@ -71,6 +71,16 @@ public class Samson
          * Gets the notifications for the platform.
          */
         Notifications notifications ();
+
+        /**
+         * Tests if an email account is configured.
+         */
+        boolean hasMailAccount ();
+
+        /**
+         * Starts a mail message. The user must inspect, modify and tap the send button.
+         */
+        void startMailMessage (String subject, String[] to, String body);
     }
 
     /**
@@ -114,6 +124,14 @@ public class Samson
 
     public static Notifications notifications () {
         return _instance.notifications();
+    }
+
+    public static boolean hasMailAccount () {
+        return _instance.hasMailAccount();
+    }
+
+    public static void startMailMessage (String subject, String[] to, String body) {
+        _instance.startMailMessage(subject, to, body);
     }
 
     public static Platform platform () {
