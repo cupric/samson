@@ -5,6 +5,8 @@
 
 package samson;
 
+import samson.crypto.SecureUtil;
+
 import playn.java.JavaPlatform;
 
 public class JavaSamson extends JvmSamson
@@ -33,5 +35,10 @@ public class JavaSamson extends JvmSamson
     public void startMailMessage (String subject, String[] to, String body) {
     }
 
+    @Override public SecureUtil secureUtil () {
+        return _secureUtil;
+    }
+
     private final JavaNotifications notifier;
+    private JvmSecureUtil _secureUtil = new JvmSecureUtil();
 }
