@@ -104,7 +104,7 @@ public class AndroidNotifications extends Notifications
         Intent intent = new Intent(applicationContext, Receiver.class);
         for (int id : getNotifications()) {
             PendingIntent pending = PendingIntent.getBroadcast(applicationContext, id, intent,
-                PendingIntent.FLAG_NO_CREATE);
+                PendingIntent.FLAG_UPDATE_CURRENT);
             if (pending != null) {
                 alarmManager.cancel(pending);
             }
