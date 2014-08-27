@@ -16,6 +16,10 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -129,6 +133,7 @@ public class AndroidNotifications extends Notifications
             new NotificationCompat.Builder(applicationContext).
                 setAutoCancel(true).
                 setSmallIcon(builder._icon).
+                setLargeIcon(getLargeIcon(builder)).
                 setContentTitle(builder._title).
                 setContentText(builder._message).
                 setVibrate(builder._vibrate ? new long[]{100, 200, 200, 200} : new long[]{}).
@@ -157,6 +162,29 @@ public class AndroidNotifications extends Notifications
                 removeNotification(id);
             }
         };
+    }
+
+    /**
+     * Returns a bitmap for the large icon, or null if none could be decoded from the resources.
+     */
+    protected Bitmap getLargeIcon (Builder builder) {
+        Resources resources = applicationContext.getResources();
+        int resource = builder._icon;
+
+        // pull the decoded resource from the resources
+        Bitmap icon = BitmapFactory.decodeResource(resources, resource);
+        if (icon == null) {
+            return null;
+        }
+
+        // if possible, rescale the icon to the appropriate size
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            int width = (int)resources.getDimension(android.R.dimen.notification_large_icon_width);
+            int height = (int)resources.getDimension(android.R.dimen.notification_large_icon_height);
+            icon = Bitmap.createScaledBitmap(icon, width, height, false);
+        }
+
+        return icon;
     }
 
     /**
