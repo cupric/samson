@@ -119,26 +119,29 @@ public class AndroidNotifications extends Notifications
         final int id = builder._data.containsKey(Notifications.ID) ?
             builder._data.get(Notifications.ID).hashCode() : getAutomaticIdentifier();
 
+        // build a simulated task stack so the back button works properly
+        TaskStackBuilder stack = TaskStackBuilder.create(applicationContext).
+            addParentStack(activityClass).
+            addNextIntent(new Intent(applicationContext, activityClass));
+
         // create the notification builder
-        NotificationCompat.Builder notification =
+        Notification notification =
             new NotificationCompat.Builder(applicationContext).
                 setAutoCancel(true).
                 setSmallIcon(builder._icon).
                 setContentTitle(builder._title).
                 setContentText(builder._message).
                 setVibrate(builder._vibrate ? new long[]{100, 200, 200, 200} : new long[]{}).
-                setWhen(when);
-
-        // build a simulated task stack so the back button works properly
-        TaskStackBuilder stack = TaskStackBuilder.create(applicationContext);
-        stack.addParentStack(activityClass);
-        stack.addNextIntent(new Intent(applicationContext, activityClass));
-        notification.setContentIntent(stack.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT));
+                setContentIntent(stack.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)).
+                setWhen(when).
+                setStyle(new NotificationCompat.BigTextStyle().
+                    bigText(builder._message)).
+        build();
 
         // build the pending intent to pass to the alarm receiver
         final PendingIntent pending =
             PendingIntent.getBroadcast(applicationContext, id,
-                new NotificationIntent(applicationContext, id, notification.build()), 0);
+                new NotificationIntent(applicationContext, id, notification), 0);
 
         // register the pending notification id
         addNotification(id);
