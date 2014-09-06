@@ -52,10 +52,12 @@ public class AndroidNotifications extends Notifications
                     (Notification)intent.getExtras().get(NotificationIntent.EXTRA_KEY_NOTIFICATION);
 
                 // remove the pending notification
-                instance.removeNotification(id);
-
-                // submit the notification
-                instance.notificationManager.notify(id, notification);
+                if (instance.removeNotification(id)) {
+                    // notification was successfully removed so send the notification
+                    instance.notificationManager.notify(id, notification);
+                } else {
+                    log.warning("Ignoring notification request due to non-existing id", "id", id);
+                }
             } catch (Exception exception) {
                 log.warning("Failed to submit Android notification", exception);
             }
@@ -111,6 +113,8 @@ public class AndroidNotifications extends Notifications
                 PendingIntent.FLAG_UPDATE_CURRENT);
             if (pending != null) {
                 alarmManager.cancel(pending);
+            } else {
+                log.warning("Failed to cancel notification", "id", id);
             }
         }
         setNotifications(Sets.<Integer>newHashSet());
@@ -120,8 +124,14 @@ public class AndroidNotifications extends Notifications
     protected Handle schedule (long when, Builder builder) {
         // pull the id of this notification based off the Builder's string id or an automatically
         // generated identifier
-        final int id = builder._data.containsKey(Notifications.ID) ?
+        final int id;
+        try {
+            id = builder._data.containsKey(Notifications.ID) ?
             builder._data.get(Notifications.ID).hashCode() : getAutomaticIdentifier();
+        }  catch (IllegalArgumentException exception) {
+            log.error("Failed to find valid identifier to send notification with.");
+            return null;
+        }
 
         // build a simulated task stack so the back button works properly
         TaskStackBuilder stack = TaskStackBuilder.create(applicationContext).
@@ -200,10 +210,13 @@ public class AndroidNotifications extends Notifications
     /**
      * Removes a notification identifier from the list of pending notifications.
      */
-    protected synchronized void removeNotification (int id) {
+    protected synchronized boolean removeNotification (int id) {
         Set<Integer> ids = getNotifications();
         if (ids.remove(id)) {
             setNotifications(ids);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -255,6 +268,8 @@ public class AndroidNotifications extends Notifications
 
     /**
      * Returns an automatically generated identifier for a notification.
+     *
+     * @throws IllegalArgumentException if no valid identifier could be found
      */
     protected synchronized int getAutomaticIdentifier () {
         Set<Integer> ids = getNotifications();
@@ -264,11 +279,10 @@ public class AndroidNotifications extends Notifications
             if (ids.contains(ii)) {
                 continue;
             }
-
             return ii;
         }
 
-        return -1;
+        throw new IllegalArgumentException();
     }
 
     /** Key used in PlayN storage to store notification information. */

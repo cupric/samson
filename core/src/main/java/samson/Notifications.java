@@ -148,6 +148,8 @@ public abstract class Notifications
         /**
          * Schedules the notification to popup at the given epoch milliseconds. For example,
          * {@code System.currentTimeMillis() + 60000} for one minute from now.
+         *
+         * <p>This method will return null if the notification fails to schedule.</p>
          */
         public Handle schedule (long time) {
             return Notifications.this.schedule(time, this);
