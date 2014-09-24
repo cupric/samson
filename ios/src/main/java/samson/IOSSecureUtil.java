@@ -29,15 +29,28 @@ import tripleplay.util.Logger;
 
 public class IOSSecureUtil extends SecureUtil
 {
-    @Override public byte[] encryptAES (byte[] key, byte[] contents) throws IOException {
-        return doAES(true, key, contents);
+    @Override public byte[] encryptAES (byte[] key, byte[] contents)
+            throws IOException
+    {
+        try {
+            return doAES(true, key, contents);
+        } catch (Throwable t) {
+            throw new IOException(t);
+        }
     }
 
-    @Override public byte[] decryptAES (byte[] key, byte[] contents) throws IOException {
-        return doAES(false, key, contents);
+    @Override public byte[] decryptAES (byte[] key, byte[] contents)
+            throws IOException
+    {
+        try {
+            return doAES(false, key, contents);
+        } catch (Throwable t) {
+            throw new IOException(t);
+        }
     }
 
-    @Override public byte[] encryptRSA (String publicKey, byte[] secret, byte[] salt) {
+    @Override public byte[] encryptRSA (String publicKey, byte[] secret, byte[] salt)
+    {
         int idx = publicKey.indexOf(SPLIT);
         RSAParameters params = new RSAParameters();
         String modString = publicKey.substring(0, idx);
@@ -59,7 +72,8 @@ public class IOSSecureUtil extends SecureUtil
         return rsa.Encrypt(encrypt, false); // false for PKCS#1 to match Java
     }
 
-    @Override public byte[] createRandomKey (int length) {
+    @Override public byte[] createRandomKey (int length)
+    {
         byte[] secret = new byte[length];
         _rand.GetBytes(secret);
         return secret;
@@ -124,7 +138,8 @@ public class IOSSecureUtil extends SecureUtil
         }
     }
 
-    protected byte[] doAES (boolean encrypting, byte[] key, byte[] contents) {
+    protected byte[] doAES (boolean encrypting, byte[] key, byte[] contents)
+    {
         MemoryStream memory = new MemoryStream();
         ICryptoTransform transform = encrypting ?
             new RijndaelManaged().CreateEncryptor(key, IV) :
