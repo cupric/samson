@@ -12,6 +12,12 @@
   <name>SamsoN Android</name>
   <packaging>jar</packaging>
 
+  <repositories>
+    <repository>
+      <id>ooo-maven-repo</id>
+      <url>http://ooo-maven.googlecode.com/hg/repository</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>net.cupric</groupId>
